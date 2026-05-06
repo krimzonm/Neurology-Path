@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>NeuroPath Monitor</title>
+</head>
+<body style="font-family: Arial; max-width: 900px; margin: auto;">
+
+<h1>NeuroPath Monitor</h1>
+<p>Leqembi MRI Tracker</p>
+
+<input id="name" placeholder="Patient Name">
+<input id="date" type="date">
+<button onclick="addPatient()">Add Patient</button>
+
+<div id="patients"></div>
+
+<script>
+let patients = [
+  {name: "Demo Patient", startDate: "2026-04-01"}
+];
+
+function calculateDates(start) {
+  let base = new Date(start);
+  let add = d => {
+    let n = new Date(base);
+    n.setDate(n.getDate()+d);
+    return n.toISOString().split('T')[0];
+  };
+  return [
+    ["Baseline MRI", start],
+    ["Pre-Infusion 5", add(28)],
+    ["Pre-Infusion 7", add(42)],
+    ["Pre-Infusion 14", add(98)]
+  ];
+}
+
+function render() {
+  let html = "";
+  patients.forEach(p => {
+    html += `<div style="border:1px solid #ccc; padding:10px; margin:10px 0;">
+      <h3>${p.name}</h3>`;
+    calculateDates(p.startDate).forEach(d => {
+      html += `<div>${d[0]} - ${d[1]}</div>`;
+    });
+    html += "</div>";
+  });
+  document.getElementById("patients").innerHTML = html;
+}
+
+function addPatient() {
+  let name = document.getElementById("name").value;
+  let date = document.getElementById("date").value;
+  if (!name || !date) return;
+  patients.push({name, startDate: date});
+  render();
+}
+
+render();
+</script>
+
+</body>
+</html>
